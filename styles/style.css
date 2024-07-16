@@ -11,6 +11,7 @@
 	--main-text-color: black;
 	--gray-accent: rgb(190, 190, 190);
 	--dark-gray-accent: rgb(90, 90, 90);
+	--yellow-color: yellow;
 }
 
 * {
@@ -27,7 +28,87 @@ body {
 	background-color: var(--main-color);
 }
 
-/* WORD GENERATOR STYLES */
+/* DARK THEME STYLES */
+
+body.dark-theme {
+	--main-color: black;
+	--accent-main-color: rgb(30, 30, 30);
+	--white-color: #fff;
+	--main-text-color: #fff;
+	--gray-accent: lightgray;
+	--dark-gray-accent: rgb(150, 150, 150);
+	--blue-color: rgb(143, 143, 251);
+}
+
+body.dark-theme #theme-toggle-button {
+	background-color: var(--blue-color);
+}
+
+body.dark-theme .word-generator-wrapper {
+	background-color: var(--accent-main-color);
+}
+
+body.dark-theme .search-box input {
+	border-bottom: 3px solid var(--main-color);
+	background-color: var(--accent-main-color);
+	color: var(--white-color);
+}
+
+body.dark-theme .search-box button {
+	background-color: var(--main-color);
+	color: var(--white-color);
+}
+
+body.dark-theme .search-box button:hover {
+	background-color: var(--white-color);
+	color: var(--main-color);
+}
+
+body.dark-theme .search-result h3 {
+	color: var(--white-color);
+}
+
+body.dark-theme .search-result button {
+	color: var(--white-color);
+}
+
+body.dark-theme .word-details {
+	color: var(--gray-accent);
+}
+
+body.dark-theme .word-meaning {
+	color: var(--white-color);
+}
+
+body.dark-theme .word-example {
+	color: var(--white-color);
+	border-left: 5px solid var(--white-color);
+}
+
+/* LIGHT THEME STYLES */
+
+#theme-toggle-button {
+	background-color: var(--main-text-color);
+	color: var(--yellow-color);
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 4%;
+	right: 2%;
+	border: none;
+	outline: none;
+	font-size: 20px;
+	height: 50px;
+	width: 50px;
+	border-radius: 50%;
+	transition: 0.3s ease-out;
+}
+
+#theme-toggle-button:hover {
+	box-shadow: 0 0 20px 5px var(--yellow-color);
+}
 
 .word-generator-wrapper {
 	background-color: var(--white-color);
@@ -68,6 +149,8 @@ body {
 	color: var(--white-color);
 	border-radius: 5px;
 	transition: 0.2s ease-out;
+	font-size: 15px;
+	font-weight: 700;
 }
 
 .search-box button:hover {
