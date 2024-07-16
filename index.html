@@ -5,11 +5,26 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Dictionary App</title>
+	<!-- FONT AWESOME LIBRARY -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+	<!-- FAVICON -->
 	<link rel="shortcut icon" href="./images/favicon.png" type="image/x-icon">
+	<!-- CSS STYLES -->
 	<link rel="stylesheet" href="./styles/style.css">
 </head>
 
 <body>
+	<audio id="word-pronouncing"></audio>
+	<section class="word-generator-wrapper">
+		<section class="search-box">
+			<input type="text" placeholder="Type the word here ..." id="input-word">
+			<button id="search-button">Search</button>
+		</section>
+
+		<section class="search-result" id="search-result"></section>
+	</section>
+
+	<!-- SCRIPT -->
 	<script src="./js/main.js"></script>
 </body>
 

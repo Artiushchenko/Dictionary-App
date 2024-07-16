@@ -1,6 +1,127 @@
+/* GOOGLE FONT */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 
+/* BASIC SETTINGS */
+
+:root {
+	--main-color: lightblue;
+	--dark-accent-main-color: rgb(80, 199, 238);
+	--white-color: white;
+	--main-text-color: black;
+	--gray-accent: rgb(190, 190, 190);
+	--dark-gray-accent: rgb(90, 90, 90);
+}
+
 * {
+	padding: 0;
+	margin: 0;
 	box-sizing: border-box;
+}
+
+*:not(i) {
 	font-family: 'Poppins', sans-serif;
+}
+
+body {
+	background-color: var(--main-color);
+}
+
+/* WORD GENERATOR STYLES */
+
+.word-generator-wrapper {
+	background-color: var(--white-color);
+	width: 90vmin;
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	padding: 50px;
+	border-radius: 10px;
+	box-shadow: 0 20px 40px rgba(38, 33, 61, 0.2);
+}
+
+/* SEARCH BOX STYLES */
+
+.search-box {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.search-box input {
+	padding: 5px;
+	width: 70%;
+	border: none;
+	outline: none;
+	border-bottom: 3px solid var(--main-color);
+	font-size: 16px;
+}
+
+.search-box button {
+	cursor: pointer;
+	padding: 15px 0;
+	width: 25%;
+	background-color: var(--main-color);
+	border: none;
+	outline: none;
+	color: var(--white-color);
+	border-radius: 5px;
+	transition: 0.2s ease-out;
+}
+
+.search-box button:hover {
+	background-color: var(--dark-accent-main-color);
+}
+
+/* SEARCH RESULT STYLES */
+
+.search-result {
+	position: relative;
+}
+
+.word {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 50px;
+}
+
+.search-result h3 {
+	font-size: 30px;
+	color: var(--main-text-color);
+}
+
+.search-result button {
+	cursor: pointer;
+	background-color: transparent;
+	color: var(--main-color);
+	border: none;
+	outline: none;
+	font-size: 20px;
+}
+
+.word-details {
+	display: flex;
+	gap: 15px;
+	color: var(--gray-accent);
+	margin: 5px 0 20px 0;
+	font-size: 14px;
+}
+
+.word-meaning {
+	color: var(--dark-gray-accent);
+	text-align: justify;
+}
+
+.word-example {
+	color: var(--dark-gray-accent);
+	font-style: italic;
+	border-left: 5px solid var(--main-color);
+	padding-left: 20px;
+	margin-top: 30px;
+}
+
+.error {
+	margin-top: 50px;
+	text-align: center;
 }
