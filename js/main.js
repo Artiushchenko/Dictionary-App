@@ -4,6 +4,10 @@ const sound = document.getElementById('word-pronouncing');
 const searchButton = document.getElementById('search-button');
 const themeToggleButton = document.getElementById('theme-toggle-button');
 const themeIcon = document.getElementById('theme-icon');
+const favoriteWordsButton = document.getElementById('favorite-words-button');
+const favoriteWordsModal = document.getElementById('favorite-words-modal');
+const favoriteWordsList = document.getElementById('favorite-words-list');
+const closeModalButton = document.getElementById('close-modal');
 
 /* LOAD THEME FROM COOKIES */
 
@@ -23,25 +27,40 @@ searchButton.addEventListener('click', () => {
 	fetch(`${API_URL}/${inputWord}`)
 		.then(response => response.json())
 		.then(data => {
+			console.log(data);
+			const wordData = data[0];
+			const word = wordData.word;
+			const partOfSpeech = wordData.meanings[0].partOfSpeech;
+			const phonetic = wordData.phonetics[0].text;
+			const definition = wordData.meanings[0].definitions[0].definition;
+			const example = wordData.meanings[0].definitions[0].example || '';
+
+			const isFavorite = checkIfFavorite(word);
+
 			searchBlock.innerHTML = `
 				<section class="word">
-					<h3>${data[0].word}</h3>
-					<button onclick="playSound()">
-						<i class="fa-solid fa-volume-high"></i>
-					</button>
+					<h3>${word}</h3>
+					<section class="word-control-panel">
+						<button class="heart-button ${isFavorite ? 'favorite' : ''}" onclick="toggleFavorite('${word}', '${definition}')">
+							<i class="fa-solid fa-heart"></i>
+						</button>
+						<button onclick="playSound()">
+							<i class="fa-solid fa-volume-high"></i>
+						</button>
+					</section>
 				</section>
 
 				<section class="word-details">
-					<p>${data[0].meanings[0].partOfSpeech}</p>
-					<p>${data[0].phonetics[0].text}</p>
+					<p>${partOfSpeech}</p>
+					<p>${phonetic}</p>
 				</section>
 
 				<p class="word-meaning">
-					${data[0].meanings[0].definitions[0].definition}
+					${definition}
 				</p>
 
 				<p class="word-example">
-					${data[0].meanings[0].definitions[0].example || ''}
+					${example}
 				</p>
 			`;
 
@@ -87,8 +106,6 @@ function setCookie(cookieName, cookieValue, days) {
 	const expires = 'expires=' + date.toUTCString();
 
 	document.cookie = cookieName + '=' + cookieValue + ';' + expires + ';path=/';
-
-	console.log(`Cookie set: ${cookieName}=${cookieValue}; ${expires}`);
 }
 
 function getCookie(cookieName) {
@@ -106,3 +123,103 @@ function getCookie(cookieName) {
 
 	return '';
 }
+
+/* TOGGLE FAVORITE WORD */
+
+function toggleFavorite(word, definition) {
+	let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+
+	if (favorites[word]) {
+		delete favorites[word];
+	} else {
+		favorites[word] = definition;
+	}
+
+	localStorage.setItem('favorites', JSON.stringify(favorites));
+	updateFavoriteButton(word);
+	loadFavoriteWords();
+}
+
+/* UPDATE FAVORITE BUTTON */
+
+function updateFavoriteButton(word) {
+	const heartButton = document.querySelector('.heart-button');
+
+	if (checkIfFavorite(word)) {
+		heartButton.classList.add('favorite');
+	} else {
+		heartButton.classList.remove('favorite');
+	}
+}
+
+/* CHECK IF WORD IS FAVORITE */
+
+function checkIfFavorite(word) {
+	let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+
+	return !!favorites[word];
+}
+
+/* LOAD FAVORITE WORDS */
+
+function loadFavoriteWords() {
+	const favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+	favoriteWordsList.innerHTML = '';
+
+	if (Object.keys(favorites).length === 0) {
+		const NO_WORDS_MESSAGE = document.createElement('li');
+		NO_WORDS_MESSAGE.textContent = 'No favorite words yet.';
+		NO_WORDS_MESSAGE.classList.add('no-words-in-list');
+		favoriteWordsList.appendChild(NO_WORDS_MESSAGE);
+	} else {
+		for (let word in favorites) {
+			const li = document.createElement('li');
+			li.innerHTML = `
+				<section class="favorite-list-definition-wrapper">	
+					<section class="wppp">
+						<b>${word}:</b>			
+						${favorites[word]}
+					</section>
+					<section class="favorite-remove-button">
+						<button onclick="removeFavorite('${word}')">
+							<i class="fa-solid fa-trash"></i>
+						</button>
+					</section>
+				</section>
+			`;
+			favoriteWordsList.appendChild(li);
+		}
+	}
+}
+
+/* REMOVE FAVORITE WORD */
+
+function removeFavorite(word) {
+	let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+	delete favorites[word];
+
+	localStorage.setItem('favorites', JSON.stringify(favorites));
+	loadFavoriteWords();
+	updateFavoriteButton(word);
+}
+
+/* OPEN MODAL */
+
+favoriteWordsButton.addEventListener('click', () => {
+	favoriteWordsModal.style.display = 'block';
+	loadFavoriteWords();
+});
+
+/* CLOSE MODAL */
+
+closeModalButton.addEventListener('click', () => {
+	favoriteWordsModal.style.display = 'none';
+});
+
+/* CLOSE MODAL WHEN CLICKED OUTSIDE */
+
+window.addEventListener('click', event => {
+	if (event.target === favoriteWordsModal) {
+		favoriteWordsModal.style.display = 'none';
+	}
+});

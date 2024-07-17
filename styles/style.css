@@ -12,6 +12,8 @@
 	--gray-accent: rgb(190, 190, 190);
 	--dark-gray-accent: rgb(90, 90, 90);
 	--yellow-color: yellow;
+	--pink-color: pink;
+	--red-color: red;
 }
 
 * {
@@ -83,6 +85,45 @@ body.dark-theme .word-meaning {
 body.dark-theme .word-example {
 	color: var(--white-color);
 	border-left: 5px solid var(--white-color);
+}
+
+body.dark-theme #favorite-words-button {
+	background-color: var(--blue-color);
+}
+
+body.dark-theme .heart-button.favorite {
+	color: var(--red-color);
+}
+
+body.dark-theme .heart-button:hover {
+	color: var(--pink-color);
+}
+
+body.dark-theme .modal {
+	background-color: rgba(0, 0, 0, 0.9);
+}
+
+body.dark-theme .modal-content {
+	background-color: var(--accent-main-color);
+	color: var(--white-color);
+}
+
+body.dark-theme .modal-content li {
+	border-bottom: 1px solid var(--white-color);
+}
+
+body.dark-theme .modal-content li button {
+	color: var(--white-color);
+}
+
+body.dark-theme .modal-content li button:hover {
+	color: var(--red-color);
+}
+
+body.dark-theme .no-words-in-list {
+	border-bottom: none !important;
+	text-align: center;
+	font-size: 20px;
 }
 
 /* LIGHT THEME STYLES */
@@ -169,6 +210,13 @@ body.dark-theme .word-example {
 	margin-top: 50px;
 }
 
+.word-control-panel {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+}
+
 .search-result h3 {
 	font-size: 30px;
 	color: var(--main-text-color);
@@ -207,4 +255,148 @@ body.dark-theme .word-example {
 .error {
 	margin-top: 50px;
 	text-align: center;
+}
+
+#favorite-words-button {
+	color: var(--red-color);
+	background-color: var(--main-text-color);
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 15%;
+	right: 2%;
+	border: none;
+	outline: none;
+	font-size: 20px;
+	height: 50px;
+	width: 50px;
+	border-radius: 50%;
+	transition: 0.3s ease-out;
+}
+
+#favorite-words-button:hover {
+	box-shadow: 0 0 20px 5px var(--red-color);
+}
+
+.heart-button {
+	background-color: transparent;
+	color: var(--main-color);
+	border: none;
+	outline: none;
+	font-size: 20px;
+	cursor: pointer;
+	transition: 0.3s ease-out;
+}
+
+.heart-button.favorite {
+	color: var(--red-color);
+}
+
+.heart-button:hover {
+	color: var(--pink-color);
+}
+
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--white-color);
+	padding: 30px;
+	width: 45%;
+	border-radius: 10px;
+	box-shadow: 0 20px 40px rgba(38, 33, 61, 0.2);
+	max-height: 60vmin;
+	overflow-y: auto;
+}
+
+.modal-content::-webkit-scrollbar {
+	width: 0 !important;
+	display: none !important;
+}
+
+.modal-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.close-button {
+	color: var(--gray-accent);
+	font-size: 20px;
+	cursor: pointer;
+	transition: 0.2s ease-out;
+}
+
+.close-button:hover,
+.close-button:focus {
+	color: var(--red-color);
+}
+
+.modal-content h3 {
+	margin: 0;
+	text-transform: uppercase;
+	font-size: 30px;
+}
+
+.modal-content ul {
+	margin-top: 20px;
+	list-style-type: none;
+	padding: 0;
+}
+
+.modal-content li {
+	display: flex;
+	flex-direction: column;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--main-color);
+}
+
+.modal-content li:last-child {
+	border-bottom: none;
+}
+
+.wppp {
+	width: 70%;
+	text-align: justify;
+	color: var(--dark-gray-accent);
+	font-style: italic;
+}
+
+.wppp b {
+	display: block;
+	color: var(--main-text-color);
+	font-style: normal;
+}
+
+.modal-content li button {
+	background: none;
+	border: none;
+	color: var(--main-color);
+	cursor: pointer;
+	font-size: 20px;
+	transition: 0.2s ease-out;
+}
+
+.modal-content li button:hover {
+	color: var(--red-color);
+}
+
+.favorite-list-definition-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
