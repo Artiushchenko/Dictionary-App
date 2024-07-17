@@ -27,44 +27,58 @@ searchButton.addEventListener('click', () => {
 	fetch(`${API_URL}/${inputWord}`)
 		.then(response => response.json())
 		.then(data => {
-			console.log(data);
-			const wordData = data[0];
-			const word = wordData.word;
-			const partOfSpeech = wordData.meanings[0].partOfSpeech;
-			const phonetic = wordData.phonetics[0].text;
-			const definition = wordData.meanings[0].definitions[0].definition;
-			const example = wordData.meanings[0].definitions[0].example || '';
+			let wordData = data[0];
+			let word = wordData.word || '';
+			let partOfSpeech = wordData.meanings?.[0]?.partOfSpeech || '';
+			let phonetic = wordData.phonetics?.find(p => p.text)?.text || '';
+			let audioSrc = wordData.phonetics?.find(p => p.audio)?.audio || '';
+			let definition = wordData.meanings?.[0]?.definitions?.[0]?.definition || '';
+			let example = wordData.meanings?.[0]?.definitions?.[0]?.example || '';
 
-			const isFavorite = checkIfFavorite(word);
+			if (word && definition) {
+				const isFavorite = checkIfFavorite(word);
 
-			searchBlock.innerHTML = `
-				<section class="word">
-					<h3>${word}</h3>
-					<section class="word-control-panel">
-						<button class="heart-button ${isFavorite ? 'favorite' : ''}" onclick="toggleFavorite('${word}', '${definition}')">
-							<i class="fa-solid fa-heart"></i>
-						</button>
-						<button onclick="playSound()">
-							<i class="fa-solid fa-volume-high"></i>
-						</button>
-					</section>
-				</section>
+				searchBlock.innerHTML = `
+                    <section class="word">
+                        <h3>${word}</h3>
+                        <section class="word-control-panel">
+                            <button class="heart-button ${isFavorite ? 'favorite' : ''}" onclick="toggleFavorite('${word}', '${definition}')">
+                                <i class="fa-solid fa-heart"></i>
+                            </button>
+                            ${
+															audioSrc
+																? `
+                                <button onclick="playSound()">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </button>
+                            `
+																: ''
+														}
+                        </section>
+                    </section>
 
-				<section class="word-details">
-					<p>${partOfSpeech}</p>
-					<p>${phonetic}</p>
-				</section>
+                    <section class="word-details">
+                        <p>${partOfSpeech}</p>
+                        <p>${phonetic}</p>
+                    </section>
 
-				<p class="word-meaning">
-					${definition}
-				</p>
+                    <p class="word-meaning">
+                        ${definition}
+                    </p>
 
-				<p class="word-example">
-					${example}
-				</p>
-			`;
+                    <p class="word-example">
+                        ${example || ''}
+                    </p>
+                `;
 
-			sound.setAttribute('src', `${data[0].phonetics[0].audio}`);
+				if (audioSrc) {
+					sound.setAttribute('src', audioSrc);
+				} else {
+					sound.removeAttribute('src');
+				}
+			} else {
+				throw new Error('Essential data is missing');
+			}
 		})
 		.catch(() => {
 			searchBlock.innerHTML = `<h3 class="error">Couldn't find the word!</h3>`;
