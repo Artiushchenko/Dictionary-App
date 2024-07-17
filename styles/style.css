@@ -2,19 +2,30 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 
-/* BASIC SETTINGS */
+/* LIGHT THEME VARIABLES */
 
 :root {
-	--main-color: lightblue;
-	--dark-accent-main-color: rgb(80, 199, 238);
-	--white-color: white;
-	--main-text-color: black;
-	--gray-accent: rgb(190, 190, 190);
-	--dark-gray-accent: rgb(90, 90, 90);
-	--yellow-color: yellow;
-	--pink-color: pink;
-	--red-color: red;
+	--main-theme-color: rgb(173, 216, 230);
+	--dark-lightblue-accent: rgb(80, 199, 238);
+	--white-color: rgb(255, 255, 255);
+	--black-color: rgb(0, 0, 0);
+	--gray-color: rgb(190, 190, 190);
+	--dark-gray-accent: rgb(150, 150, 150);
+	--yellow-color: rgb(255, 255, 0);
+	--pink-color: rgb(255, 192, 203);
+	--red-color: rgb(255, 0, 0);
 }
+
+/* DARK THEME VARIABLES */
+
+body.dark-theme {
+	--main-theme-color: rgb(0, 0, 0);
+	--light-black-color: rgb(30, 30, 30);
+	--light-gray-accent: rgb(211, 211, 211);
+	--dark-blue-color: rgb(143, 143, 251);
+}
+
+/* BASIC SETTINGS */
 
 * {
 	padding: 0;
@@ -27,43 +38,33 @@
 }
 
 body {
-	background-color: var(--main-color);
+	background-color: var(--main-theme-color);
 }
 
 /* DARK THEME STYLES */
 
-body.dark-theme {
-	--main-color: black;
-	--accent-main-color: rgb(30, 30, 30);
-	--white-color: #fff;
-	--main-text-color: #fff;
-	--gray-accent: lightgray;
-	--dark-gray-accent: rgb(150, 150, 150);
-	--blue-color: rgb(143, 143, 251);
+body.dark-theme #theme-toggle-button,
+body.dark-theme #favorite-words-button {
+	background-color: var(--dark-blue-color);
 }
 
-body.dark-theme #theme-toggle-button {
-	background-color: var(--blue-color);
-}
-
-body.dark-theme .word-generator-wrapper {
-	background-color: var(--accent-main-color);
+body.dark-theme .search-block-wrapper {
+	background-color: var(--light-black-color);
 }
 
 body.dark-theme .search-box input {
-	border-bottom: 3px solid var(--main-color);
-	background-color: var(--accent-main-color);
+	border-color: var(--black-color);
 	color: var(--white-color);
 }
 
 body.dark-theme .search-box button {
-	background-color: var(--main-color);
+	background-color: var(--black-color);
 	color: var(--white-color);
 }
 
 body.dark-theme .search-box button:hover {
 	background-color: var(--white-color);
-	color: var(--main-color);
+	color: var(--black-color);
 }
 
 body.dark-theme .search-result h3 {
@@ -75,7 +76,7 @@ body.dark-theme .search-result button {
 }
 
 body.dark-theme .word-details {
-	color: var(--gray-accent);
+	color: var(--light-gray-accent);
 }
 
 body.dark-theme .word-meaning {
@@ -84,11 +85,7 @@ body.dark-theme .word-meaning {
 
 body.dark-theme .word-example {
 	color: var(--white-color);
-	border-left: 5px solid var(--white-color);
-}
-
-body.dark-theme #favorite-words-button {
-	background-color: var(--blue-color);
+	border-color: var(--white-color);
 }
 
 body.dark-theme .heart-button.favorite {
@@ -104,7 +101,7 @@ body.dark-theme .modal {
 }
 
 body.dark-theme .modal-content {
-	background-color: var(--accent-main-color);
+	background-color: var(--light-black-color);
 	color: var(--white-color);
 }
 
@@ -120,16 +117,14 @@ body.dark-theme .modal-content li button:hover {
 	color: var(--red-color);
 }
 
-body.dark-theme .no-words-in-list {
-	border-bottom: none !important;
-	text-align: center;
-	font-size: 20px;
+body.dark-theme .favorite-word b {
+	color: var(--white-color);
 }
 
 /* LIGHT THEME STYLES */
 
 #theme-toggle-button {
-	background-color: var(--main-text-color);
+	background-color: var(--black-color);
 	color: var(--yellow-color);
 	cursor: pointer;
 	display: flex;
@@ -151,7 +146,9 @@ body.dark-theme .no-words-in-list {
 	box-shadow: 0 0 20px 5px var(--yellow-color);
 }
 
-.word-generator-wrapper {
+/* SEARCH WORD STYLES */
+
+.search-block-wrapper {
 	background-color: var(--white-color);
 	width: 90vmin;
 	position: absolute;
@@ -162,8 +159,6 @@ body.dark-theme .no-words-in-list {
 	border-radius: 10px;
 	box-shadow: 0 20px 40px rgba(38, 33, 61, 0.2);
 }
-
-/* SEARCH BOX STYLES */
 
 .search-box {
 	width: 100%;
@@ -176,7 +171,8 @@ body.dark-theme .no-words-in-list {
 	width: 70%;
 	border: none;
 	outline: none;
-	border-bottom: 3px solid var(--main-color);
+	border-bottom: 3px solid var(--main-theme-color);
+	background-color: transparent;
 	font-size: 16px;
 }
 
@@ -184,7 +180,7 @@ body.dark-theme .no-words-in-list {
 	cursor: pointer;
 	padding: 15px 0;
 	width: 25%;
-	background-color: var(--main-color);
+	background-color: var(--main-theme-color);
 	border: none;
 	outline: none;
 	color: var(--white-color);
@@ -195,10 +191,10 @@ body.dark-theme .no-words-in-list {
 }
 
 .search-box button:hover {
-	background-color: var(--dark-accent-main-color);
+	background-color: var(--dark-lightblue-accent);
 }
 
-/* SEARCH RESULT STYLES */
+/* SEARCH WORD RESULT STYLES */
 
 .search-result {
 	position: relative;
@@ -219,13 +215,13 @@ body.dark-theme .no-words-in-list {
 
 .search-result h3 {
 	font-size: 30px;
-	color: var(--main-text-color);
+	color: var(--black-color);
 }
 
 .search-result button {
 	cursor: pointer;
 	background-color: transparent;
-	color: var(--main-color);
+	color: var(--main-theme-color);
 	border: none;
 	outline: none;
 	font-size: 20px;
@@ -234,7 +230,7 @@ body.dark-theme .no-words-in-list {
 .word-details {
 	display: flex;
 	gap: 15px;
-	color: var(--gray-accent);
+	color: var(--gray-color);
 	margin: 5px 0 20px 0;
 	font-size: 14px;
 }
@@ -247,19 +243,19 @@ body.dark-theme .no-words-in-list {
 .word-example {
 	color: var(--dark-gray-accent);
 	font-style: italic;
-	border-left: 5px solid var(--main-color);
+	border-left: 5px solid var(--main-theme-color);
 	padding-left: 20px;
 	margin-top: 30px;
 }
 
-.error {
+.search-error {
 	margin-top: 50px;
 	text-align: center;
 }
 
 #favorite-words-button {
 	color: var(--red-color);
-	background-color: var(--main-text-color);
+	background-color: var(--black-color);
 	cursor: pointer;
 	display: flex;
 	justify-content: center;
@@ -282,7 +278,6 @@ body.dark-theme .no-words-in-list {
 
 .heart-button {
 	background-color: transparent;
-	color: var(--main-color);
 	border: none;
 	outline: none;
 	font-size: 20px;
@@ -297,6 +292,8 @@ body.dark-theme .no-words-in-list {
 .heart-button:hover {
 	color: var(--pink-color);
 }
+
+/* MODAL WINDOW STYLES */
 
 .modal {
 	display: none;
@@ -335,7 +332,7 @@ body.dark-theme .no-words-in-list {
 }
 
 .close-button {
-	color: var(--gray-accent);
+	color: var(--gray-color);
 	font-size: 20px;
 	cursor: pointer;
 	transition: 0.2s ease-out;
@@ -347,7 +344,6 @@ body.dark-theme .no-words-in-list {
 }
 
 .modal-content h3 {
-	margin: 0;
 	text-transform: uppercase;
 	font-size: 30px;
 }
@@ -355,37 +351,36 @@ body.dark-theme .no-words-in-list {
 .modal-content ul {
 	margin-top: 20px;
 	list-style-type: none;
-	padding: 0;
 }
 
 .modal-content li {
 	display: flex;
 	flex-direction: column;
 	padding: 10px 0;
-	border-bottom: 1px solid var(--main-color);
+	border-bottom: 1px solid var(--main-theme-color);
 }
 
 .modal-content li:last-child {
 	border-bottom: none;
 }
 
-.wppp {
+.favorite-word {
 	width: 70%;
 	text-align: justify;
 	color: var(--dark-gray-accent);
 	font-style: italic;
 }
 
-.wppp b {
+.favorite-word b {
 	display: block;
-	color: var(--main-text-color);
+	color: var(--black-color);
 	font-style: normal;
 }
 
 .modal-content li button {
 	background: none;
 	border: none;
-	color: var(--main-color);
+	color: var(--main-theme-color);
 	cursor: pointer;
 	font-size: 20px;
 	transition: 0.2s ease-out;
@@ -395,8 +390,14 @@ body.dark-theme .no-words-in-list {
 	color: var(--red-color);
 }
 
-.favorite-list-definition-wrapper {
+.favorite-list-wrapper {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+}
+
+.no-favorites-message {
+	border-bottom: none;
+	text-align: center;
+	font-size: 20px;
 }

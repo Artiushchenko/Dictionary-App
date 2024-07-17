@@ -1,3 +1,5 @@
+/* DECLARATION OF VARIABLES */
+
 const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en';
 const searchBlock = document.getElementById('search-result');
 const sound = document.getElementById('word-pronouncing');
@@ -81,7 +83,7 @@ searchButton.addEventListener('click', () => {
 			}
 		})
 		.catch(() => {
-			searchBlock.innerHTML = `<h3 class="error">Couldn't find the word!</h3>`;
+			searchBlock.innerHTML = `<h3 class="search-error">Couldn't find the word!</h3>`;
 		});
 });
 
@@ -106,7 +108,7 @@ themeToggleButton.addEventListener('click', () => {
 		themeIcon.classList.remove('fa-moon');
 		themeIcon.classList.add('fa-sun');
 
-		/* SET COOKIE FOR 7 DAYS */
+		/* SET COOKIE */
 		setCookie('theme', 'dark-theme', 7);
 	}
 });
@@ -138,7 +140,7 @@ function getCookie(cookieName) {
 	return '';
 }
 
-/* TOGGLE FAVORITE WORD */
+/* TOGGLE STATUS OF THE FAVORITE WORD */
 
 function toggleFavorite(word, definition) {
 	let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
@@ -154,7 +156,7 @@ function toggleFavorite(word, definition) {
 	loadFavoriteWords();
 }
 
-/* UPDATE FAVORITE BUTTON */
+/* UPDATE STATUS FAVORITE WORD */
 
 function updateFavoriteButton(word) {
 	const heartButton = document.querySelector('.heart-button');
@@ -174,7 +176,7 @@ function checkIfFavorite(word) {
 	return !!favorites[word];
 }
 
-/* LOAD FAVORITE WORDS */
+/* LOAD LIST OF FAVORITE WORDS */
 
 function loadFavoriteWords() {
 	const favorites = JSON.parse(localStorage.getItem('favorites')) || {};
@@ -183,22 +185,20 @@ function loadFavoriteWords() {
 	if (Object.keys(favorites).length === 0) {
 		const NO_WORDS_MESSAGE = document.createElement('li');
 		NO_WORDS_MESSAGE.textContent = 'No favorite words yet.';
-		NO_WORDS_MESSAGE.classList.add('no-words-in-list');
+		NO_WORDS_MESSAGE.classList.add('no-favorites-message');
 		favoriteWordsList.appendChild(NO_WORDS_MESSAGE);
 	} else {
 		for (let word in favorites) {
 			const li = document.createElement('li');
 			li.innerHTML = `
-				<section class="favorite-list-definition-wrapper">	
-					<section class="wppp">
+				<section class="favorite-list-wrapper">	
+					<section class="favorite-word">
 						<b>${word}:</b>			
 						${favorites[word]}
 					</section>
-					<section class="favorite-remove-button">
-						<button onclick="removeFavorite('${word}')">
-							<i class="fa-solid fa-trash"></i>
-						</button>
-					</section>
+					<button onclick="removeFavorite('${word}')">
+						<i class="fa-solid fa-trash"></i>
+					</button>
 				</section>
 			`;
 			favoriteWordsList.appendChild(li);
@@ -217,20 +217,20 @@ function removeFavorite(word) {
 	updateFavoriteButton(word);
 }
 
-/* OPEN MODAL */
+/* OPEN MODAL WINDOW */
 
 favoriteWordsButton.addEventListener('click', () => {
 	favoriteWordsModal.style.display = 'block';
 	loadFavoriteWords();
 });
 
-/* CLOSE MODAL */
+/* CLOSE MODAL WINDOW */
 
 closeModalButton.addEventListener('click', () => {
 	favoriteWordsModal.style.display = 'none';
 });
 
-/* CLOSE MODAL WHEN CLICKED OUTSIDE */
+/* CLOSE MODAL WINDOW WHEN CLICKED OUTSIDE */
 
 window.addEventListener('click', event => {
 	if (event.target === favoriteWordsModal) {
