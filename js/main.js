@@ -4,22 +4,46 @@ const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en';
 const searchBlock = document.getElementById('search-result');
 const sound = document.getElementById('word-pronouncing');
 const searchButton = document.getElementById('search-button');
-const themeToggleButton = document.getElementById('theme-toggle-button');
-const themeIcon = document.getElementById('theme-icon');
 const favoriteWordsButton = document.getElementById('favorite-words-button');
 const favoriteWordsModal = document.getElementById('favorite-words-modal');
 const favoriteWordsList = document.getElementById('favorite-words-list');
 const closeModalButton = document.getElementById('close-modal');
+const themeToggleButton = document.getElementById('theme-toggle-button');
+const themeIcon = document.getElementById('theme-icon');
+const startQuizButton = document.getElementById('start-quiz-button');
+const quizModal = document.getElementById('quiz-modal');
+const closeQuizModalButton = document.getElementById('close-quiz-modal');
+const quizCardContainer = document.getElementById('quiz-card-container');
+const nextCardButton = document.getElementById('next-card-button');
+const quizCompletionMessage = document.getElementById('quiz-completion-message');
+const quizContent = document.querySelector('.quiz-content');
 
-/* LOAD THEME FROM COOKIES */
+/* HANDLE COOKIE */
 
-document.addEventListener('DOMContentLoaded', () => {
-	const theme = getCookie('theme');
+function setCookie(cookieName, cookieValue, days) {
+	const date = new Date();
+	date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
 
-	if (theme) {
-		document.body.classList.add(theme);
+	const expires = 'expires=' + date.toUTCString();
+
+	document.cookie = cookieName + '=' + cookieValue + ';' + expires + ';path=/';
+}
+
+function getCookie(cookieName) {
+	const name = cookieName + '=';
+	const decodeCookie = decodeURIComponent(document.cookie);
+	const cookieArray = decodeCookie.split(';');
+
+	for (let i = 0; i < cookieArray.length; i++) {
+		let cookie = cookieArray[i].trim();
+
+		if (cookie.indexOf(name) === 0) {
+			return cookie.substring(name.length, cookie.length);
+		}
 	}
-});
+
+	return '';
+}
 
 /* SEARCH THE WORD */
 
@@ -93,65 +117,22 @@ function playSound() {
 	sound.play();
 }
 
-/* CHANGE THEME */
-
-themeToggleButton.addEventListener('click', () => {
-	if (document.body.classList.contains('dark-theme')) {
-		document.body.classList.remove('dark-theme');
-		themeIcon.classList.remove('fa-sun');
-		themeIcon.classList.add('fa-moon');
-
-		/* REMOVE COOKIE */
-		setCookie('theme', '', -1);
-	} else {
-		document.body.classList.add('dark-theme');
-		themeIcon.classList.remove('fa-moon');
-		themeIcon.classList.add('fa-sun');
-
-		/* SET COOKIE */
-		setCookie('theme', 'dark-theme', 7);
-	}
-});
-
-/* HANDLE COOKIE */
-
-function setCookie(cookieName, cookieValue, days) {
-	const date = new Date();
-	date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-
-	const expires = 'expires=' + date.toUTCString();
-
-	document.cookie = cookieName + '=' + cookieValue + ';' + expires + ';path=/';
-}
-
-function getCookie(cookieName) {
-	const name = cookieName + '=';
-	const decodeCookie = decodeURIComponent(document.cookie);
-	const cookieArray = decodeCookie.split(';');
-
-	for (let i = 0; i < cookieArray.length; i++) {
-		let cookie = cookieArray[i].trim();
-
-		if (cookie.indexOf(name) === 0) {
-			return cookie.substring(name.length, cookie.length);
-		}
-	}
-
-	return '';
-}
-
 /* TOGGLE STATUS OF THE FAVORITE WORD */
 
 function toggleFavorite(word, definition) {
 	let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+	let repeatCounters = getRepeatsCounters();
 
 	if (favorites[word]) {
 		delete favorites[word];
+		delete repeatCounters[word];
 	} else {
 		favorites[word] = definition;
+		repeatCounters[word] = repeatCounters[word] || 0;
 	}
 
 	localStorage.setItem('favorites', JSON.stringify(favorites));
+	localStorage.setItem('repeatCounters', JSON.stringify(repeatCounters));
 	updateFavoriteButton(word);
 	loadFavoriteWords();
 }
@@ -180,6 +161,7 @@ function checkIfFavorite(word) {
 
 function loadFavoriteWords() {
 	const favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+	const repeatCounters = getRepeatsCounters();
 	favoriteWordsList.innerHTML = '';
 
 	if (Object.keys(favorites).length === 0) {
@@ -189,11 +171,22 @@ function loadFavoriteWords() {
 		favoriteWordsList.appendChild(NO_WORDS_MESSAGE);
 	} else {
 		for (let word in favorites) {
+			const repeats = repeatCounters[word] || 0;
+			const emoji = getEmoji(repeats);
+			const repeatColor = getRepeatColor(repeats);
+
 			const li = document.createElement('li');
 			li.innerHTML = `
 				<section class="favorite-list-wrapper">	
 					<section class="favorite-word">
-						<b>${word}:</b>			
+						<section class="favorite-word-wrapper">
+							<section class="repeat-counter" data-word="${word}" style="background-color: ${repeatColor}">
+								<span>Count of repeats:</span>
+								<span class="count">${repeats}</span>
+								<span class="emoji">${emoji}</span>							
+  							</section>
+							<b>${word}</b>
+						</section>			
 						${favorites[word]}
 					</section>
 					<button onclick="removeFavorite('${word}')">
@@ -210,9 +203,13 @@ function loadFavoriteWords() {
 
 function removeFavorite(word) {
 	let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+	let repeatCounters = getRepeatsCounters();
+
 	delete favorites[word];
+	delete repeatCounters[word];
 
 	localStorage.setItem('favorites', JSON.stringify(favorites));
+	localStorage.setItem('repeatCounters', JSON.stringify(repeatCounters));
 	loadFavoriteWords();
 	updateFavoriteButton(word);
 }
@@ -235,5 +232,197 @@ closeModalButton.addEventListener('click', () => {
 window.addEventListener('click', event => {
 	if (event.target === favoriteWordsModal) {
 		favoriteWordsModal.style.display = 'none';
+	}
+});
+
+/* CLOSE QUIZ MODAL WINDOW */
+
+closeQuizModalButton.addEventListener('click', () => {
+	quizModal.style.display = 'none';
+});
+
+/* CLOSE QUIZ MODAL WINDOW WHEN CLICKED OUTSIDE */
+
+window.addEventListener('click', event => {
+	if (event.target === quizModal) {
+		quizModal.style.display = 'none';
+	}
+});
+
+/* START QUIZ */
+
+startQuizButton.addEventListener('click', startQuiz);
+
+/* LOAD NEXT QUIZ CARD */
+
+nextCardButton.addEventListener('click', loadNextCard);
+
+/* START QUIZ FUNCTION */
+
+let currentCardIndex = 0;
+let words = [];
+
+function startQuiz() {
+	const favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+
+	words = Object.keys(favorites).map(word => ({
+		word,
+		definition: favorites[word],
+	}));
+
+	currentCardIndex = 0;
+	quizModal.style.display = 'block';
+	quizCardContainer.style.display = 'block';
+	nextCardButton.style.display = words.length > 0 ? 'block' : 'none';
+	quizCompletionMessage.style.display = 'none';
+
+	quizContent.classList.remove('complete');
+
+	if (words.length > 0) {
+		loadNextCard();
+	} else {
+		quizCompletionMessage.style.display = 'block';
+		quizCompletionMessage.style.backgroundColor = 'red';
+		quizCompletionMessage.textContent = 'No favorite words to quiz on!';
+		quizCardContainer.innerHTML = ''; // Убедитесь, что контейнер карт пуст
+		nextCardButton.style.display = 'none';
+
+		quizContent.classList.add('complete');
+
+		setTimeout(() => {
+			quizCompletionMessage.style.display = 'none';
+			quizModal.style.display = 'none';
+			quizContent.classList.remove('complete');
+		}, 3000);
+	}
+}
+
+/* LOAD NEXT QUIZ CARD FUNCTION */
+
+function loadNextCard() {
+	if (currentCardIndex >= words.length) {
+		quizCardContainer.innerHTML = '';
+		nextCardButton.style.display = 'none';
+		quizCompletionMessage.style.display = 'block';
+		quizCompletionMessage.style.backgroundColor = 'green';
+		quizCompletionMessage.textContent = 'You have completed the quiz!';
+
+		quizContent.classList.add('complete');
+
+		setTimeout(() => {
+			quizCompletionMessage.style.display = 'none';
+			quizModal.style.display = 'none';
+			quizContent.classList.remove('complete');
+		}, 3000);
+
+		return;
+	}
+
+	const word = words[currentCardIndex];
+	quizCardContainer.innerHTML = `
+		<section class="quiz-card" id="quiz-card">
+			<section class="quiz-card-front">
+				<h3>${word.word}</h3>
+				<p>Tap to see the definition</p>
+			</section>
+			<section class="quiz-card-back">
+				<h3>Definition</h3>
+				<p>${word.definition}</p>
+			</section>
+		</section>
+	`;
+
+	const quizCard = document.getElementById('quiz-card');
+	quizCard.addEventListener('click', () => {
+		quizCard.classList.toggle('flip');
+
+		if (quizCard.classList.contains('flip')) {
+			incrementRepeatCounter(word.word);
+		}
+	});
+
+	currentCardIndex++;
+}
+
+/* INCREMENT REPEAT COUNTER FUNCTION */
+
+function incrementRepeatCounter(word) {
+	const repeatCounters = getRepeatsCounters();
+	repeatCounters[word] = (repeatCounters[word] || 0) + 1;
+
+	localStorage.setItem('repeatCounters', JSON.stringify(repeatCounters));
+	updateRepeatCounter(word, repeatCounters[word]);
+}
+
+/* UPDATE REPEAT COUNTER FUNCTION */
+
+function updateRepeatCounter(word, repeats) {
+	const counterElement = document.querySelector(`.repeat-counter[data-word="${word}"]`);
+
+	if (counterElement) {
+		counterElement.style.backgroundColor = getRepeatColor(repeats);
+		counterElement.querySelector('.emoji').textContent = getEmoji(repeats);
+		counterElement.querySelector('.count').textContent = repeats;
+	}
+}
+
+/* GET WORD COUNTERS FROM LOCAL STORAGE FUNCTION */
+
+function getRepeatsCounters() {
+	const repeatCounters = JSON.parse(localStorage.getItem('repeatCounters')) || {};
+	return repeatCounters;
+}
+
+/* GET EMOJI FUNCTION */
+
+function getEmoji(repeats) {
+	if (repeats >= 6) {
+		return '😊';
+	} else if (repeats >= 3) {
+		return '😐';
+	} else {
+		return '😢';
+	}
+}
+
+/* GET REPEAT COLOR FUNCTION */
+
+function getRepeatColor(repeats) {
+	if (repeats >= 6) {
+		return '#7FFF00';
+	} else if (repeats >= 3) {
+		return '#FFFF00';
+	} else {
+		return '#FF0000';
+	}
+}
+
+/* LOAD THEME FROM COOKIES */
+
+document.addEventListener('DOMContentLoaded', () => {
+	const theme = getCookie('theme');
+
+	if (theme) {
+		document.body.classList.add(theme);
+	}
+});
+
+/* CHANGE THEME */
+
+themeToggleButton.addEventListener('click', () => {
+	if (document.body.classList.contains('dark-theme')) {
+		document.body.classList.remove('dark-theme');
+		themeIcon.classList.remove('fa-sun');
+		themeIcon.classList.add('fa-moon');
+
+		/* REMOVE COOKIE */
+		setCookie('theme', '', -1);
+	} else {
+		document.body.classList.add('dark-theme');
+		themeIcon.classList.remove('fa-moon');
+		themeIcon.classList.add('fa-sun');
+
+		/* SET COOKIE */
+		setCookie('theme', 'dark-theme', 7);
 	}
 });
