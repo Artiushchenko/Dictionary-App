@@ -1,0 +1,113 @@
+/* MOBILE PHONES */
+
+@media (max-width: 480px) {
+	.search-block-wrapper {
+		padding: 20px;
+	}
+
+	.word {
+		margin-top: 20px;
+	}
+
+	#theme-toggle-button {
+		top: 2%;
+		left: 4%;
+		font-size: 18px;
+	}
+
+	#favorite-words-button {
+		top: 2%;
+		right: 4%;
+		font-size: 18px;
+	}
+
+	.modal-content {
+		padding: 20px;
+		width: 90%;
+		max-height: 95vmin;
+	}
+
+	.modal-content h3 {
+		font-size: 25px;
+	}
+
+	.favorite-word {
+		width: 80%;
+	}
+}
+
+/* MOBILE DEVICES AND TABLETS */
+
+@media (min-width: 481px) and (max-width: 768px) {
+	.search-block-wrapper {
+		padding: 30px;
+	}
+
+	.word {
+		margin-top: 20px;
+	}
+
+	#theme-toggle-button {
+		top: 3%;
+		left: 4%;
+		font-size: 18px;
+	}
+
+	#favorite-words-button {
+		top: 3%;
+		right: 4%;
+		font-size: 18px;
+	}
+
+	.modal-content {
+		padding: 30px;
+		width: 90%;
+		max-height: 90vmin;
+	}
+
+	.modal-content h3 {
+		font-size: 25px;
+	}
+
+	.favorite-word {
+		width: 85%;
+	}
+}
+
+/* TABLETS, NETBOOKS AND LAPTOPS */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+	.search-block-wrapper {
+		padding: 35px;
+	}
+
+	.word {
+		margin-top: 30px;
+	}
+
+	#theme-toggle-button {
+		top: 3%;
+		left: 4%;
+		font-size: 18px;
+	}
+
+	#favorite-words-button {
+		top: 3%;
+		right: 4%;
+		font-size: 18px;
+	}
+
+	.modal-content {
+		padding: 35px;
+		width: 90%;
+		max-height: 90vmin;
+	}
+
+	.modal-content h3 {
+		font-size: 25px;
+	}
+
+	.favorite-word {
+		width: 85%;
+	}
+}
