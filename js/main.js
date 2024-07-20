@@ -1,15 +1,28 @@
-/* DECLARATION OF VARIABLES */
+/* 
+----------------------------------------------------------------------------------------------
+DECLARATION OF VARIABLES
+----------------------------------------------------------------------------------------------
+*/
 
+/* API */
 const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en';
+
+/* WORD SEARCH BLOCK */
 const searchBlock = document.getElementById('search-result');
-const sound = document.getElementById('word-pronouncing');
 const searchButton = document.getElementById('search-button');
+const sound = document.getElementById('word-pronouncing');
+
+/* FAVORITE WORDS MODAL WINDOW */
 const favoriteWordsButton = document.getElementById('favorite-words-button');
 const favoriteWordsModal = document.getElementById('favorite-words-modal');
 const favoriteWordsList = document.getElementById('favorite-words-list');
 const closeModalButton = document.getElementById('close-modal');
+
+/* TOGGLE THEME */
 const themeToggleButton = document.getElementById('theme-toggle-button');
 const themeIcon = document.getElementById('theme-icon');
+
+/* QUIZ MODAL WINDOW */
 const startQuizButton = document.getElementById('start-quiz-button');
 const quizModal = document.getElementById('quiz-modal');
 const closeQuizModalButton = document.getElementById('close-quiz-modal');
@@ -18,14 +31,16 @@ const nextCardButton = document.getElementById('next-card-button');
 const quizCompletionMessage = document.getElementById('quiz-completion-message');
 const quizContent = document.querySelector('.quiz-content');
 
-/* HANDLE COOKIE */
+/* 
+----------------------------------------------------------------------------------------------
+HANDLE COOKIE
+----------------------------------------------------------------------------------------------
+*/
 
 function setCookie(cookieName, cookieValue, days) {
 	const date = new Date();
 	date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-
 	const expires = 'expires=' + date.toUTCString();
-
 	document.cookie = cookieName + '=' + cookieValue + ';' + expires + ';path=/';
 }
 
@@ -45,7 +60,11 @@ function getCookie(cookieName) {
 	return '';
 }
 
-/* SEARCH THE WORD */
+/* 
+----------------------------------------------------------------------------------------------
+SEARCH THE WORD
+----------------------------------------------------------------------------------------------
+*/
 
 searchButton.addEventListener('click', () => {
 	let inputWord = document.getElementById('input-word').value;
@@ -112,12 +131,15 @@ searchButton.addEventListener('click', () => {
 });
 
 /* PLAY PRONUNCIATION  */
-
 function playSound() {
 	sound.play();
 }
 
-/* TOGGLE STATUS OF THE FAVORITE WORD */
+/* 
+----------------------------------------------------------------------------------------------
+TOGGLE STATUS OF THE FAVORITE WORD
+----------------------------------------------------------------------------------------------
+*/
 
 function toggleFavorite(word, definition) {
 	let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
@@ -138,7 +160,6 @@ function toggleFavorite(word, definition) {
 }
 
 /* UPDATE STATUS FAVORITE WORD */
-
 function updateFavoriteButton(word) {
 	const heartButton = document.querySelector('.heart-button');
 
@@ -150,7 +171,6 @@ function updateFavoriteButton(word) {
 }
 
 /* CHECK IF WORD IS FAVORITE */
-
 function checkIfFavorite(word) {
 	let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
 
@@ -158,7 +178,6 @@ function checkIfFavorite(word) {
 }
 
 /* LOAD LIST OF FAVORITE WORDS */
-
 function loadFavoriteWords() {
 	const favorites = JSON.parse(localStorage.getItem('favorites')) || {};
 	const repeatCounters = getRepeatsCounters();
@@ -200,7 +219,6 @@ function loadFavoriteWords() {
 }
 
 /* REMOVE FAVORITE WORD */
-
 function removeFavorite(word) {
 	let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
 	let repeatCounters = getRepeatsCounters();
@@ -214,35 +232,42 @@ function removeFavorite(word) {
 	updateFavoriteButton(word);
 }
 
-/* OPEN MODAL WINDOW */
+/* 
+----------------------------------------------------------------------------------------------
+MANAGING A MODAL WINDOW FOR LEARNING WORDS
+----------------------------------------------------------------------------------------------
+*/
 
+/* OPEN MODAL WINDOW */
 favoriteWordsButton.addEventListener('click', () => {
 	favoriteWordsModal.style.display = 'block';
 	loadFavoriteWords();
 });
 
 /* CLOSE MODAL WINDOW */
-
 closeModalButton.addEventListener('click', () => {
 	favoriteWordsModal.style.display = 'none';
 });
 
 /* CLOSE MODAL WINDOW WHEN CLICKED OUTSIDE */
-
 window.addEventListener('click', event => {
 	if (event.target === favoriteWordsModal) {
 		favoriteWordsModal.style.display = 'none';
 	}
 });
 
-/* CLOSE QUIZ MODAL WINDOW */
+/* 
+----------------------------------------------------------------------------------------------
+QUIZ MODAL WINDOW CONTROL
+----------------------------------------------------------------------------------------------
+*/
 
+/* CLOSE QUIZ MODAL WINDOW */
 closeQuizModalButton.addEventListener('click', () => {
 	quizModal.style.display = 'none';
 });
 
 /* CLOSE QUIZ MODAL WINDOW WHEN CLICKED OUTSIDE */
-
 window.addEventListener('click', event => {
 	if (event.target === quizModal) {
 		quizModal.style.display = 'none';
@@ -250,15 +275,12 @@ window.addEventListener('click', event => {
 });
 
 /* START QUIZ */
-
 startQuizButton.addEventListener('click', startQuiz);
 
 /* LOAD NEXT QUIZ CARD */
-
 nextCardButton.addEventListener('click', loadNextCard);
 
 /* START QUIZ FUNCTION */
-
 let currentCardIndex = 0;
 let words = [];
 
@@ -284,7 +306,7 @@ function startQuiz() {
 		quizCompletionMessage.style.display = 'block';
 		quizCompletionMessage.style.backgroundColor = 'red';
 		quizCompletionMessage.textContent = 'No favorite words to quiz on!';
-		quizCardContainer.innerHTML = ''; // Убедитесь, что контейнер карт пуст
+		quizCardContainer.innerHTML = '';
 		nextCardButton.style.display = 'none';
 
 		quizContent.classList.add('complete');
@@ -298,7 +320,6 @@ function startQuiz() {
 }
 
 /* LOAD NEXT QUIZ CARD FUNCTION */
-
 function loadNextCard() {
 	if (currentCardIndex >= words.length) {
 		quizCardContainer.innerHTML = '';
@@ -344,8 +365,13 @@ function loadNextCard() {
 	currentCardIndex++;
 }
 
-/* INCREMENT REPEAT COUNTER FUNCTION */
+/* 
+----------------------------------------------------------------------------------------------
+MANAGING THE WORD REPETITION COUNTER
+----------------------------------------------------------------------------------------------
+*/
 
+/* INCREMENT REPEAT COUNTER FUNCTION */
 function incrementRepeatCounter(word) {
 	const repeatCounters = getRepeatsCounters();
 	repeatCounters[word] = (repeatCounters[word] || 0) + 1;
@@ -355,7 +381,6 @@ function incrementRepeatCounter(word) {
 }
 
 /* UPDATE REPEAT COUNTER FUNCTION */
-
 function updateRepeatCounter(word, repeats) {
 	const counterElement = document.querySelector(`.repeat-counter[data-word="${word}"]`);
 
@@ -367,14 +392,12 @@ function updateRepeatCounter(word, repeats) {
 }
 
 /* GET WORD COUNTERS FROM LOCAL STORAGE FUNCTION */
-
 function getRepeatsCounters() {
 	const repeatCounters = JSON.parse(localStorage.getItem('repeatCounters')) || {};
 	return repeatCounters;
 }
 
 /* GET EMOJI FUNCTION */
-
 function getEmoji(repeats) {
 	if (repeats >= 6) {
 		return '😊';
@@ -386,7 +409,6 @@ function getEmoji(repeats) {
 }
 
 /* GET REPEAT COLOR FUNCTION */
-
 function getRepeatColor(repeats) {
 	if (repeats >= 6) {
 		return '#7FFF00';
@@ -397,8 +419,13 @@ function getRepeatColor(repeats) {
 	}
 }
 
-/* LOAD THEME FROM COOKIES */
+/* 
+----------------------------------------------------------------------------------------------
+THEME SWITCH CONTROL
+----------------------------------------------------------------------------------------------
+*/
 
+/* LOAD THEME FROM COOKIES */
 document.addEventListener('DOMContentLoaded', () => {
 	const theme = getCookie('theme');
 
@@ -408,7 +435,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* CHANGE THEME */
-
 themeToggleButton.addEventListener('click', () => {
 	if (document.body.classList.contains('dark-theme')) {
 		document.body.classList.remove('dark-theme');
