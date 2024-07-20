@@ -84,37 +84,33 @@ searchButton.addEventListener('click', () => {
 				const isFavorite = checkIfFavorite(word);
 
 				searchBlock.innerHTML = `
-                    <section class="word">
-                        <h3>${word}</h3>
-                        <section class="word-control-panel">
-                            <button class="heart-button ${isFavorite ? 'favorite' : ''}" onclick="toggleFavorite('${word}', '${definition}')">
-                                <i class="fa-solid fa-heart"></i>
-                            </button>
-                            ${
-															audioSrc
-																? `
-                                <button onclick="playSound()">
-                                    <i class="fa-solid fa-volume-high"></i>
-                                </button>
-                            `
-																: ''
-														}
-                        </section>
-                    </section>
+                    			<section class="word">
+                        			<h3>${word}</h3>
+                       				<section class="word-control-panel">
+                           				<button class="heart-button ${isFavorite ? 'favorite' : ''}" onclick="toggleFavorite('${word}', '${definition}')">
+                                				<i class="fa-solid fa-heart"></i>
+                            				</button>
+                            				${audioSrc ? `
+                                				<button onclick="playSound()">
+                                    					<i class="fa-solid fa-volume-high"></i>
+                                				</button>
+                            				` : ''}
+                        			</section>
+                    			</section>
 
-                    <section class="word-details">
-                        <p>${partOfSpeech}</p>
-                        <p>${phonetic}</p>
-                    </section>
+                    			<section class="word-details">
+                        			<p>${partOfSpeech}</p>
+                        			<p>${phonetic}</p>
+                    			</section>
 
-                    <p class="word-meaning">
-                        ${definition}
-                    </p>
+                    			<p class="word-meaning">
+                        			${definition}
+                    			</p>
 
-                    <p class="word-example">
-                        ${example || ''}
-                    </p>
-                `;
+                    			<p class="word-example">
+                        			${example || ''}
+                    			</p>
+                		`;
 
 				if (audioSrc) {
 					sound.setAttribute('src', audioSrc);
